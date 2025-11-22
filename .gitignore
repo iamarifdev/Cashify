@@ -1,0 +1,38 @@
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# IDE/editor
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Build outputs (.NET)
+**/bin/
+**/obj/
+**/TestResults/
+*.nupkg
+
+# Secrets and local settings
+**/appsettings.Local*.json
+**/*.local.settings.json
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Node/Angular
+web/**/node_modules/
+web/**/dist/
+web/**/.angular/
+web/**/coverage/
+web/**/.env
+web/**/.env.local
+web/**/.env.*.local
+
+# Python virtual envs (if any utilities)
+.venv/
