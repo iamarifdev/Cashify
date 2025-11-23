@@ -36,3 +36,5 @@ web/**/.env.*.local
 
 # Python virtual envs (if any utilities)
 .venv/
+screenshots/
+web/templates/
