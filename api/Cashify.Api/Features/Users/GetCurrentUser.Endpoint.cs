@@ -16,6 +16,7 @@ public class GetCurrentUserEndpoint : IEndpoint
 
                 return Results.Ok(new { userId, email, name, picture });
             })
-            .WithTags("Users");
+            .WithTags("Users")
+            .WithDocs("Current user profile", "Returns the authenticated user's profile details from the JWT.");
     }
 }

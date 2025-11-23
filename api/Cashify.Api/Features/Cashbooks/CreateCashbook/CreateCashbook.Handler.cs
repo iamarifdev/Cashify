@@ -7,10 +7,12 @@ namespace Cashify.Api.Features.Cashbooks.CreateCashbook;
 public class CreateCashbookHandler
 {
     private readonly AppDbContext _dbContext;
+    private readonly Infrastructure.ActivityLogService _activityLogService;
 
-    public CreateCashbookHandler(AppDbContext dbContext)
+    public CreateCashbookHandler(AppDbContext dbContext, Infrastructure.ActivityLogService activityLogService)
     {
         _dbContext = dbContext;
+        _activityLogService = activityLogService;
     }
 
     public async Task<Guid?> Handle(Guid businessId, Guid userId, CreateCashbookCommand command, CancellationToken cancellationToken)
@@ -41,6 +43,7 @@ public class CreateCashbookHandler
         });
 
         await _dbContext.SaveChangesAsync(cancellationToken);
+        await _activityLogService.Log(userId, "cashbook.create", businessId, cashbook.Id, cashbook.Id, new { command.Name, command.Currency }, cancellationToken);
         return cashbook.Id;
     }
 }

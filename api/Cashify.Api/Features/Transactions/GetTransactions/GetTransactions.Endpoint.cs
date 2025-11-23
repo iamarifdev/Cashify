@@ -24,6 +24,7 @@ public class GetTransactionsEndpoint : IEndpoint
 
                     return Results.Ok(items);
                 })
-            .WithTags("Transactions");
+            .WithTags("Transactions")
+            .WithDocs("List transactions", "Lists transactions for the specified cashbook, newest first.");
     }
 }

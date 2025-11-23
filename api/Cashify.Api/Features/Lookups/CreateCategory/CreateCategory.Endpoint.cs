@@ -36,6 +36,7 @@ public class CreateCategoryEndpoint : IEndpoint
 
                     return Results.Created($"/lookups/categories/{id}", new { id, command.Name, command.Type });
                 })
-            .WithTags("Lookups");
+            .WithTags("Lookups")
+            .WithDocs("Create category", "Creates a category for the business; type should align to income/expense/transfer.");
     }
 }

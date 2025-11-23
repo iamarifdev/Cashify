@@ -24,6 +24,7 @@ public class GetTransactionChangesEndpoint : IEndpoint
 
                     return Results.Ok(changes);
                 })
-            .WithTags("Transactions");
+            .WithTags("Transactions")
+            .WithDocs("Transaction change history", "Returns the recorded change history for a transaction.");
     }
 }

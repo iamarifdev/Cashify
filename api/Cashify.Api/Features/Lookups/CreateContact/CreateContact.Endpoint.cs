@@ -36,6 +36,7 @@ public class CreateContactEndpoint : IEndpoint
 
                     return Results.Created($"/lookups/contacts/{id}", new { id, command.Name, command.Type });
                 })
-            .WithTags("Lookups");
+            .WithTags("Lookups")
+            .WithDocs("Create contact", "Creates a contact for the business (customer/supplier) with optional phone/email.");
     }
 }

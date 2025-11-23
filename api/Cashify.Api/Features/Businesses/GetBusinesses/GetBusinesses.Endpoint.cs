@@ -19,6 +19,7 @@ public class GetBusinessesEndpoint : IEndpoint
                     var businesses = await handler.Handle(userId, ct);
                     return Results.Ok(businesses);
                 })
-            .WithTags("Businesses");
+            .WithTags("Businesses")
+            .WithDocs("List my businesses", "Returns businesses where the caller is a member, including their role.");
     }
 }

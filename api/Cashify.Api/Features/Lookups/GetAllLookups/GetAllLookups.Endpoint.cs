@@ -24,6 +24,7 @@ public class GetAllLookupsEndpoint : IEndpoint
 
                     return Results.Ok(result);
                 })
-            .WithTags("Lookups");
+            .WithTags("Lookups")
+            .WithDocs("Get lookups", "Returns categories, contacts, and payment methods for the business (cached client-side).");
     }
 }

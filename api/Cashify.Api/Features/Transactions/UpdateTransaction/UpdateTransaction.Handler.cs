@@ -7,10 +7,12 @@ namespace Cashify.Api.Features.Transactions.UpdateTransaction;
 public class UpdateTransactionHandler
 {
     private readonly AppDbContext _dbContext;
+    private readonly Infrastructure.ActivityLogService _activityLogService;
 
-    public UpdateTransactionHandler(AppDbContext dbContext)
+    public UpdateTransactionHandler(AppDbContext dbContext, Infrastructure.ActivityLogService activityLogService)
     {
         _dbContext = dbContext;
+        _activityLogService = activityLogService;
     }
 
     public async Task<bool> Handle(Guid businessId, Guid cashbookId, Guid transactionId, Guid userId, UpdateTransactionCommand command, CancellationToken cancellationToken)
@@ -67,6 +69,18 @@ public class UpdateTransactionHandler
         }
 
         await _dbContext.SaveChangesAsync(cancellationToken);
+
+        if (changes.Any())
+        {
+            await _activityLogService.Log(
+                userId,
+                "transaction.update",
+                businessId,
+                cashbookId,
+                transactionId,
+                new { changes },
+                cancellationToken);
+        }
         return true;
     }
 }

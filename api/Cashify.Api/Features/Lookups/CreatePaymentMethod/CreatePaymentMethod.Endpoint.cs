@@ -36,6 +36,7 @@ public class CreatePaymentMethodEndpoint : IEndpoint
 
                     return Results.Created($"/lookups/payment-methods/{id}", new { id, command.Name });
                 })
-            .WithTags("Lookups");
+            .WithTags("Lookups")
+            .WithDocs("Create payment method", "Creates a payment method for the business.");
     }
 }

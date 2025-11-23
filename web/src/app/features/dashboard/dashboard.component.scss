@@ -1,0 +1,141 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.role-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #c8e6c9;
+  background: #e8f5e9;
+  color: #1b5e20;
+}
+
+.role-chip {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #1b5e20;
+}
+
+.role-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.role-text .label {
+  color: #334155;
+}
+
+.role-text .value {
+  color: #1b5e20;
+}
+
+.role-text .link {
+  color: #0a7cff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  align-items: center;
+}
+
+.filter-field {
+  width: 100%;
+}
+
+.filter-field.narrow {
+  max-width: 240px;
+}
+
+.alert {
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.alert.error {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecdd3;
+}
+
+.alert.muted {
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.cashbook-list {
+  display: grid;
+  gap: 12px;
+}
+
+.cashbook-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.cashbook-card .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #eef2ff;
+  color: #3b5edb;
+  display: grid;
+  place-items: center;
+}
+
+.cashbook-card .details .name {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.cashbook-card .details .meta {
+  color: #475569;
+  font-size: 12px;
+}
+
+.cashbook-card .balance {
+  text-align: right;
+}
+
+.cashbook-card .amount {
+  color: #059669;
+  font-weight: 700;
+}
+
+.cashbook-card .caption {
+  font-size: 12px;
+  color: #475569;
+}
+
+.empty {
+  text-align: center;
+  padding: 24px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.empty .title {
+  margin: 0 0 4px;
+  font-weight: 700;
+}
+
+.empty .subtitle {
+  margin: 0;
+  color: #475569;
+  font-size: 14px;
+}

@@ -19,6 +19,7 @@ public class GetBusinessEndpoint : IEndpoint
                     var business = await handler.Handle(id, userId, ct);
                     return business is null ? Results.NotFound() : Results.Ok(business);
                 })
-            .WithTags("Businesses");
+            .WithTags("Businesses")
+            .WithDocs("Get business", "Gets a single business by ID for members.");
     }
 }

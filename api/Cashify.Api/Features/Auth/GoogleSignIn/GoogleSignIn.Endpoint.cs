@@ -23,6 +23,7 @@ public class GoogleSignInEndpoint : IEndpoint
                     return Results.Ok(response);
                 })
             .AllowAnonymous()
-            .WithTags("Auth");
+            .WithTags("Auth")
+            .WithDocs("Google sign-in", "Validates a Google ID token, upserts the user, and issues a JWT for subsequent requests.");
     }
 }

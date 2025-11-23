@@ -21,12 +21,19 @@ public class GoogleSignInHandler
 
     public async Task<GoogleSignInResponse> Handle(GoogleSignInRequest request, CancellationToken cancellationToken)
     {
+        var clientIds = _configuration.GetSection("Google:ClientIds").Get<string[]>();
         var clientId = _configuration.GetValue<string>("Google:ClientId");
+        var allowedAudiences = clientIds?.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+        if ((allowedAudiences == null || allowedAudiences.Length == 0) && !string.IsNullOrWhiteSpace(clientId))
+        {
+            allowedAudiences = new[] { clientId };
+        }
+
         var payload = await GoogleJsonWebSignature.ValidateAsync(
             request.IdToken,
             new GoogleJsonWebSignature.ValidationSettings
             {
-                Audience = string.IsNullOrWhiteSpace(clientId) ? null : new[] { clientId }
+                Audience = allowedAudiences
             });
 
         var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.GoogleUserId == payload.Subject, cancellationToken);
@@ -53,7 +60,8 @@ public class GoogleSignInHandler
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
+        var hasBusinesses = await _dbContext.BusinessMembers.AnyAsync(x => x.UserId == user.Id, cancellationToken);
         var token = _jwtTokenService.CreateToken(user);
-        return new GoogleSignInResponse(token, user.Id, user.Email, user.Name, user.PhotoUrl);
+        return new GoogleSignInResponse(token, user.Id, user.Email, user.Name, user.PhotoUrl, hasBusinesses);
     }
 }

@@ -23,28 +23,6 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<User>()
-            .HasIndex(u => u.GoogleUserId)
-            .IsUnique();
-
-        modelBuilder.Entity<User>()
-            .HasIndex(u => u.Email)
-            .IsUnique();
-
-        modelBuilder.Entity<BusinessMember>()
-            .HasIndex(x => new { x.BusinessId, x.UserId })
-            .IsUnique();
-
-        modelBuilder.Entity<CashbookMember>()
-            .HasIndex(x => new { x.CashbookId, x.UserId })
-            .IsUnique();
-
-        modelBuilder.Entity<Transaction>()
-            .HasIndex(x => new { x.BusinessId, x.CashbookId, x.TransactionDate });
-
-        modelBuilder.Entity<TransactionChange>()
-            .Property(x => x.ChangesJson)
-            .HasColumnType("jsonb");
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
     }
 }
-

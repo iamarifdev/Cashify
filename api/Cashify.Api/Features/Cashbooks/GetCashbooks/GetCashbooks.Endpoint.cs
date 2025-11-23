@@ -17,13 +17,14 @@ public class GetCashbooksEndpoint : IEndpoint
                     }
 
                     var result = await handler.Handle(id, userId, ct);
-                    if (!result.Any())
+                    if (!result.IsMember)
                     {
                         return Results.Forbid();
                     }
 
-                    return Results.Ok(result);
+                    return Results.Ok(result.Cashbooks);
                 })
-            .WithTags("Cashbooks");
+            .WithTags("Cashbooks")
+            .WithDocs("List cashbooks", "Lists cashbooks for a business when the caller is a member.");
     }
 }

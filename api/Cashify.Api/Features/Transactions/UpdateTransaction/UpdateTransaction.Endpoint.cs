@@ -34,6 +34,7 @@ public class UpdateTransactionEndpoint : IEndpoint
                     var ok = await handler.Handle(businessId, cashbookId, transactionId, userId, command, ct);
                     return ok ? Results.NoContent() : Results.NotFound();
                 })
-            .WithTags("Transactions");
+            .WithTags("Transactions")
+            .WithDocs("Update transaction", "Updates a transaction and records a JSON diff history.");
     }
 }

@@ -5,5 +5,5 @@ public record GoogleSignInResponse(
     Guid UserId,
     string Email,
     string Name,
-    string? PhotoUrl);
-
+    string? PhotoUrl,
+    bool HasBusinesses);

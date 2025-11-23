@@ -1,0 +1,105 @@
+.onboarding {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f6f8ff 0%, #eef2fb 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px 64px;
+  color: #0f172a;
+}
+
+.brand-bar {
+  width: 100%;
+  max-width: 960px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  color: #3c5fd7;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #d0d4ff;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #d0d4ff;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+}
+
+.onboarding-card {
+  width: 100%;
+  max-width: 760px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+}
+
+.card-content {
+  padding: 32px 32px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.intro h1 {
+  margin: 6px 0 0;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  color: #3c5fd7;
+  margin: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  width: 100%;
+}
+
+.submit {
+  width: 100%;
+  padding: 10px 0;
+  font-weight: 600;
+}
+
+.hint {
+  margin: 0;
+  color: #475569;
+  font-size: 12px;
+}
+
+.error {
+  margin: 0;
+  color: #dc2626;
+  font-size: 13px;
+}

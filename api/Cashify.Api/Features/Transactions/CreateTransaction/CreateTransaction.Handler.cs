@@ -7,10 +7,12 @@ namespace Cashify.Api.Features.Transactions.CreateTransaction;
 public class CreateTransactionHandler
 {
     private readonly AppDbContext _dbContext;
+    private readonly Infrastructure.ActivityLogService _activityLogService;
 
-    public CreateTransactionHandler(AppDbContext dbContext)
+    public CreateTransactionHandler(AppDbContext dbContext, Infrastructure.ActivityLogService activityLogService)
     {
         _dbContext = dbContext;
+        _activityLogService = activityLogService;
     }
 
     public async Task<Guid?> Handle(Guid businessId, Guid cashbookId, Guid userId, CreateTransactionCommand command, CancellationToken cancellationToken)
@@ -93,6 +95,7 @@ public class CreateTransactionHandler
         });
 
         await _dbContext.SaveChangesAsync(cancellationToken);
+        await _activityLogService.Log(userId, "transaction.create", businessId, cashbookId, tx.Id, new { command.Amount, command.Type, command.Description, command.TransactionDate }, cancellationToken);
         return tx.Id;
     }
 }

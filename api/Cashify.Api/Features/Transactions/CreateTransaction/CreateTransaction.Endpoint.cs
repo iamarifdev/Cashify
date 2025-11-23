@@ -38,6 +38,7 @@ public class CreateTransactionEndpoint : IEndpoint
 
                     return Results.Created($"/businesses/{businessId}/cashbooks/{cashbookId}/transactions/{id}", new { id });
                 })
-            .WithTags("Transactions");
+            .WithTags("Transactions")
+            .WithDocs("Create transaction", "Creates a transaction in the cashbook with optional inline lookup creation.");
     }
 }

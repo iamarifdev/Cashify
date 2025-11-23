@@ -37,6 +37,7 @@ public class CreateCashbookEndpoint : IEndpoint
 
                     return Results.Created($"/businesses/{id}/cashbooks/{cashbookId}", new { id = cashbookId, name = command.Name });
                 })
-            .WithTags("Cashbooks");
+            .WithTags("Cashbooks")
+            .WithDocs("Create cashbook", "Creates a cashbook under a business and assigns the caller as owner.");
     }
 }

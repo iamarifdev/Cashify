@@ -6,6 +6,10 @@ namespace Cashify.Api.Extensions;
 
 public static class EndpointExtensions
 {
+    public static RouteHandlerBuilder WithDocs(this RouteHandlerBuilder builder, string summary, string description)
+        => builder.WithSummary(summary)
+            .WithDescription(description);
+
     public static IServiceCollection AddEndpointsFromAssembly(this IServiceCollection services, Assembly assembly)
     {
         var serviceDescriptors = assembly
@@ -29,5 +33,15 @@ public static class EndpointExtensions
         }
 
         return app;
+    }
+
+    public static RouteGroupBuilder MapEndpoints(this RouteGroupBuilder group, IServiceProvider services)
+    {
+        var endpoints = services.GetRequiredService<IEnumerable<IEndpoint>>();
+        foreach (var endpoint in endpoints)
+        {
+            endpoint.MapEndpoint(group);
+        }
+        return group;
     }
 }

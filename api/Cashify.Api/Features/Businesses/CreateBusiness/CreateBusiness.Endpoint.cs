@@ -31,6 +31,7 @@ public class CreateBusinessEndpoint : IEndpoint
                     var businessId = await handler.Handle(command, userId, ct);
                     return Results.Created($"/businesses/{businessId}", new { id = businessId, name = command.Name });
                 })
-            .WithTags("Businesses");
+            .WithTags("Businesses")
+            .WithDocs("Create business", "Creates a new business and assigns the caller as owner.");
     }
 }
