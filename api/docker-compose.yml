@@ -1,0 +1,40 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cashify-api
+    env_file:
+      - .env
+    ports:
+      - "80:8080"
+    depends_on:
+      seq:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://0.0.0.0:8080
+      - LOGGING__CONSOLE__ENABLED=true
+      - LOGGING__LOGLEVEL__DEFAULT=Information
+    volumes:
+      - ./logs:/app/logs
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: "512M"
+  seq:
+    image: datalust/seq:latest
+    container_name: cashify-seq
+    ports:
+      - "5341:5341"
+      - "8082:80"
+    environment:
+      ACCEPT_EULA: Y
+      SEQ_FIRSTRUN_NOAUTHENTICATION: "True"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 20s

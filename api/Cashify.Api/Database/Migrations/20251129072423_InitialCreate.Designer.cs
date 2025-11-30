@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cashify.Api.Database.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251122200543_Initial")]
-    partial class Initial
+    [Migration("20251129072423_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

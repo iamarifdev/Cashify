@@ -9,17 +9,17 @@ public class AppDbContext : DbContext
     {
     }
 
-    public DbSet<User> Users => Set<User>();
-    public DbSet<Business> Businesses => Set<Business>();
-    public DbSet<BusinessMember> BusinessMembers => Set<BusinessMember>();
-    public DbSet<Cashbook> Cashbooks => Set<Cashbook>();
-    public DbSet<CashbookMember> CashbookMembers => Set<CashbookMember>();
-    public DbSet<Category> Categories => Set<Category>();
-    public DbSet<Contact> Contacts => Set<Contact>();
-    public DbSet<PaymentMethod> PaymentMethods => Set<PaymentMethod>();
-    public DbSet<Transaction> Transactions => Set<Transaction>();
-    public DbSet<TransactionChange> TransactionChanges => Set<TransactionChange>();
-    public DbSet<ActivityLog> ActivityLogs => Set<ActivityLog>();
+    public DbSet<User> Users { get; set; }
+    public DbSet<Business> Businesses { get; set; }
+    public DbSet<BusinessMember> BusinessMembers { get; set; }
+    public DbSet<Cashbook> Cashbooks { get; set; }
+    public DbSet<CashbookMember> CashbookMembers { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Contact> Contacts { get; set; }
+    public DbSet<PaymentMethod> PaymentMethods { get; set; }
+    public DbSet<Transaction> Transactions { get; set; }
+    public DbSet<TransactionChange> TransactionChanges { get; set; }
+    public DbSet<ActivityLog> ActivityLogs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

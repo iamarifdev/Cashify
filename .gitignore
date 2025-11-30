@@ -38,3 +38,10 @@ web/**/.env.*.local
 .venv/
 screenshots/
 web/templates/
+
+# .env file
+.env
+
+# infra
+.terraform
+logs

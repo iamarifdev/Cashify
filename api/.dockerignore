@@ -1,0 +1,41 @@
+# .dockerignore for optimized builds
+
+# .NET build artifacts
+**/bin/
+**/obj/
+**/out/
+**/.vs/
+**/.vscode/
+
+# Development files
+**/.git
+**/.gitignore
+**/.idea/
+**/README.md
+**/*.sln.DotSettings*
+**/Dockerfile*
+**/docker-compose*
+**/deploy.sh
+**/.dockerignore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and temp files
+**/*.log
+**/logs/
+**/temp/
+
+# Test files
+**/TestResults/
+**/*.Tests/
+**/*Test*
+
+# Node modules (if any)
+**/node_modules/
+
+# Environment files (use production configs)
+appsettings.Development.json
+.env*
+*.user.*
