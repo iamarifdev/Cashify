@@ -83,10 +83,11 @@ jobs:
           fi
 
           # Login to Docker Hub for private image pull
+          echo "Logging in to Docker Hub with username: ${DOCKER_USERNAME}"
           echo "${DOCKER_PASSWORD}" | docker login docker.io -u "${DOCKER_USERNAME}" --password-stdin
 
           # Update docker-compose.prod.yml to use new image tag
-          sed -i "s|image: docker.io/iamarifdev/cashify:latest|image: docker.io/iamarifdev/cashify:${IMAGE_TAG}|g" docker-compose.prod.yml
+          sed -i 's|image: docker.io/iamarifdev/cashify:latest|image: docker.io/iamarifdev/cashify:'${IMAGE_TAG}'|g' docker-compose.prod.yml
 
           # Create logs directory if it doesn't exist
           mkdir -p logs
