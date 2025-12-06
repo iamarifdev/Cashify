@@ -62,9 +62,18 @@ jobs:
           PORT: ${{ secrets.SSH_PORT }}
           NEON_CONN_STRING: ${{ secrets.NEON_CONNECTION_STRING }}
           IMAGE_TAG: ${{ github.sha }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
           ssh -o StrictHostKeyChecking=accept-new -p $PORT $USER@$HOST "bash -s" << 'EOF'
-          cd /opt/cashify/api
+          cd /opt/cashify
+
+          # Git fetch latest changes
+          git fetch origin main
+          git reset --hard origin/main
+          git clean -fd
+
+          cd api
 
           # Create .env file if it doesn't exist
           if [ ! -f .env ]; then
@@ -72,6 +81,9 @@ jobs:
             echo "ASPNETCORE_ENVIRONMENT=Production" >> .env
             echo "ASPNETCORE_URLS=http://0.0.0.0:8080" >> .env
           fi
+
+          # Login to Docker Hub for private image pull
+          echo "${DOCKER_PASSWORD}" | docker login docker.io -u "${DOCKER_USERNAME}" --password-stdin
 
           # Update docker-compose.prod.yml to use new image tag
           sed -i "s|image: docker.io/iamarifdev/cashify:latest|image: docker.io/iamarifdev/cashify:${IMAGE_TAG}|g" docker-compose.prod.yml
@@ -96,4 +108,7 @@ jobs:
           
           # Cleanup unused images
           docker image prune -f
+
+          # Logout from Docker Hub
+          docker logout docker.io
           EOF
