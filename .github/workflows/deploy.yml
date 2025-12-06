@@ -2,10 +2,12 @@ name: Deploy to EC2 (Cashify API)
 
 on:
   push:
-    paths:
-      - 'api/**'
     branches:
       - main
+    paths:
+      - 'api/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
 
 env:
   REGISTRY: docker.io
