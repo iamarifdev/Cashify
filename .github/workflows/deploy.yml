@@ -73,32 +73,26 @@ jobs:
             echo "ASPNETCORE_URLS=http://0.0.0.0:8080" >> .env
           fi
 
-          # Update docker-compose.yml to use new image
-          sed -i "s|build:|image: docker.io/iamarifdev/cashify:${IMAGE_TAG}|g" docker-compose.yml
-          sed -i '/^    build:/,$d' docker-compose.yml
-          
-          # Ensure image line is correctly placed
-          if ! grep -q "image: docker.io/iamarifdev/cashify" docker-compose.yml; then
-            sed -i "1a\    image: docker.io/iamarifdev/cashify:${IMAGE_TAG}" docker-compose.yml
-          fi
+          # Update docker-compose.prod.yml to use new image tag
+          sed -i "s|image: docker.io/iamarifdev/cashify:latest|image: docker.io/iamarifdev/cashify:${IMAGE_TAG}|g" docker-compose.prod.yml
 
           # Create logs directory if it doesn't exist
           mkdir -p logs
 
           # Pull latest images
-          docker-compose pull
+          docker compose -f docker-compose.prod.yml pull
           
           # Stop existing containers if running
-          docker-compose down || true
+          docker compose -f docker-compose.prod.yml down || true
           
           # Start services
-          docker-compose up -d
+          docker compose -f docker-compose.prod.yml up -d
           
           # Wait for services to be healthy
           sleep 30
           
           # Show status
-          docker-compose ps
+          docker compose -f docker-compose.prod.yml ps
           
           # Cleanup unused images
           docker image prune -f
