@@ -37,9 +37,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=sha,prefix={{branch}}-
+            type=sha
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image
@@ -50,7 +48,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Start SSH agent (reuse local key)
+      - name: Start SSH agent
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
@@ -65,51 +63,51 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          ssh -o StrictHostKeyChecking=accept-new -p $PORT $USER@$HOST "bash -s" << 'EOF'
+          ssh -o StrictHostKeyChecking=accept-new -p $PORT $USER@$HOST "bash -s" << EOF
+          set -e
+
           cd /opt/cashify
 
-          # Git fetch latest changes
+          echo "▶ Pulling latest code..."
           git fetch origin main
           git reset --hard origin/main
           git clean -fd
 
           cd api
 
-          # Create .env file if it doesn't exist
-          if [ ! -f .env ]; then
-            echo "ConnectionStrings__Default=\"${NEON_CONN_STRING}\"" > .env
-            echo "ASPNETCORE_ENVIRONMENT=Production" >> .env
-            echo "ASPNETCORE_URLS=http://0.0.0.0:8080" >> .env
-          fi
+          echo "▶ Writing .env file safely..."
+          cat << EOT > .env
+          ConnectionStrings__Default=${NEON_CONN_STRING}
+          ASPNETCORE_ENVIRONMENT=Production
+          ASPNETCORE_URLS=http://0.0.0.0:8080
+          EOT
 
-          # Login to Docker Hub for private image pull
-          echo "Logging in to Docker Hub with username: ${DOCKER_USERNAME}"
+          echo "▶ Logging into Docker Hub as ${DOCKER_USERNAME}"
           echo "${DOCKER_PASSWORD}" | docker login docker.io -u "${DOCKER_USERNAME}" --password-stdin
 
-          # Update docker-compose.prod.yml to use new image tag
-          sed -i 's|image: docker.io/iamarifdev/cashify:latest|image: docker.io/iamarifdev/cashify:'${IMAGE_TAG}'|g' docker-compose.prod.yml
+          echo "▶ Updating image tag in docker-compose..."
+          sed -i "s|image: docker.io/iamarifdev/cashify:.*|image: docker.io/iamarifdev/cashify:${IMAGE_TAG}|g" docker-compose.prod.yml
 
-          # Create logs directory if it doesn't exist
           mkdir -p logs
 
-          # Pull latest images
+          echo "▶ Pulling latest image..."
           docker compose -f docker-compose.prod.yml pull
-          
-          # Stop existing containers if running
+
+          echo "▶ Stopping old containers..."
           docker compose -f docker-compose.prod.yml down || true
-          
-          # Start services
+
+          echo "▶ Starting new containers..."
           docker compose -f docker-compose.prod.yml up -d
-          
-          # Wait for services to be healthy
+
+          echo "▶ Waiting for app startup..."
           sleep 30
-          
-          # Show status
+
+          echo "▶ Container status:"
           docker compose -f docker-compose.prod.yml ps
-          
-          # Cleanup unused images
+
+          echo "▶ Cleaning unused images..."
           docker image prune -f
 
-          # Logout from Docker Hub
+          echo "▶ Logging out from Docker Hub..."
           docker logout docker.io
           EOF
