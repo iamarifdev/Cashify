@@ -61,7 +61,7 @@ jobs:
           NEON_CONN_STRING: ${{ secrets.NEON_CONNECTION_STRING }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          ssh -p $PORT $USER@$HOST "bash -s" << 'EOF'
+          ssh -o StrictHostKeyChecking=accept-new -p $PORT $USER@$HOST "bash -s" << 'EOF'
           cd /opt/cashify/api
 
           # Create .env file if it doesn't exist
