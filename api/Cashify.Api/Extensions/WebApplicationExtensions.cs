@@ -18,7 +18,7 @@ public static class WebApplicationExtensions
             app.UseCors(cors =>
             {
                 cors
-                    .WithOrigins("http://localhost:4200")
+                    .WithOrigins("http://localhost:3000")
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();

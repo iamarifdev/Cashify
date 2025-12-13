@@ -15,7 +15,7 @@ public class JwtTokenService
         _configuration = configuration;
     }
 
-    public string CreateToken(User user)
+    public (string token, long expiresIn) CreateTokenWithExpiration(User user)
     {
         var jwtSection = _configuration.GetSection("Jwt");
         var issuer = jwtSection["Issuer"] ?? "cashify-api";
@@ -31,14 +31,18 @@ public class JwtTokenService
             new("picture", user.PhotoUrl ?? string.Empty)
         };
 
+        var expirationTime = DateTime.UtcNow.AddHours(1);
         var token = new JwtSecurityToken(
             issuer: issuer,
             audience: audience,
             claims: claims,
             notBefore: DateTime.UtcNow,
-            expires: DateTime.UtcNow.AddHours(1),
+            expires: expirationTime,
             signingCredentials: credentials);
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+        var expiresIn = (long)(expirationTime - DateTime.UtcNow).TotalSeconds;
+
+        return (tokenString, expiresIn);
     }
 }

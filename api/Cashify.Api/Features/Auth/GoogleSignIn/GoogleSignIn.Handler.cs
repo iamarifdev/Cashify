@@ -26,7 +26,7 @@ public class GoogleSignInHandler
         var allowedAudiences = clientIds?.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
         if ((allowedAudiences == null || allowedAudiences.Length == 0) && !string.IsNullOrWhiteSpace(clientId))
         {
-            allowedAudiences = new[] { clientId };
+            allowedAudiences = [clientId];
         }
 
         var payload = await GoogleJsonWebSignature.ValidateAsync(
@@ -46,6 +46,7 @@ public class GoogleSignInHandler
                 Email = payload.Email,
                 Name = payload.Name ?? payload.Email,
                 PhotoUrl = payload.Picture,
+                EmailVerified = payload.EmailVerified,
                 CreatedAt = DateTime.UtcNow,
                 LastLoginAt = DateTime.UtcNow
             };
@@ -55,13 +56,22 @@ public class GoogleSignInHandler
         {
             user.Name = payload.Name ?? user.Name;
             user.PhotoUrl = payload.Picture ?? user.PhotoUrl;
+            user.EmailVerified = payload.EmailVerified;
             user.LastLoginAt = DateTime.UtcNow;
         }
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        var hasBusinesses = await _dbContext.BusinessMembers.AnyAsync(x => x.UserId == user.Id, cancellationToken);
-        var token = _jwtTokenService.CreateToken(user);
-        return new GoogleSignInResponse(token, user.Id, user.Email, user.Name, user.PhotoUrl, hasBusinesses);
+        var userInfo = new UserInfo(
+            Id: user.Id.ToString(),
+            Name: user.Name,
+            Email: user.Email,
+            PhotoUrl: user.PhotoUrl,
+            EmailVerified: user.EmailVerified,
+            HasCompletedOnboarding: user.HasCompletedOnboarding
+        );
+
+        var (token, expiresIn) = _jwtTokenService.CreateTokenWithExpiration(user);
+        return new GoogleSignInResponse(userInfo, token, expiresIn);
     }
 }
