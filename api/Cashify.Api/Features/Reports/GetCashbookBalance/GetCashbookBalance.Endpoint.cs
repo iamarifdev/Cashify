@@ -1,5 +1,5 @@
-using System.IdentityModel.Tokens.Jwt;
 using Cashify.Api.Features;
+using Cashify.Api.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Cashify.Api.Features.Reports.GetCashbookBalance;
@@ -9,14 +9,9 @@ public class GetCashbookBalanceEndpoint : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("/businesses/{businessId:guid}/cashbooks/{cashbookId:guid}/reports/balance",
-                [Authorize] async (Guid businessId, Guid cashbookId, HttpContext context, GetCashbookBalanceHandler handler, CancellationToken ct) =>
+                [Authorize] async (Guid businessId, Guid cashbookId, IUserContext userContext, GetCashbookBalanceHandler handler, CancellationToken ct) =>
                 {
-                    var userIdValue = context.User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-                    if (!Guid.TryParse(userIdValue, out var userId))
-                    {
-                        return Results.Unauthorized();
-                    }
-
+                    var userId = userContext.GetUserId();
                     var balance = await handler.Handle(businessId, cashbookId, userId, ct);
                     if (balance is null)
                     {

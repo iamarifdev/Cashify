@@ -1,4 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
+using Cashify.Api.Infrastructure;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +11,7 @@ public class CreateContactEndpoint : IEndpoint
     {
         app.MapPost("/lookups/contacts",
                 [Authorize] async ([FromBody] CreateContactCommand command,
-                    HttpContext context,
+                    IUserContext userContext,
                     CreateContactHandler handler,
                     IValidator<CreateContactCommand> validator,
                     CancellationToken ct) =>
@@ -22,12 +22,7 @@ public class CreateContactEndpoint : IEndpoint
                         return Results.ValidationProblem(validation.ToDictionary());
                     }
 
-                    var userIdValue = context.User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-                    if (!Guid.TryParse(userIdValue, out var userId))
-                    {
-                        return Results.Unauthorized();
-                    }
-
+                    var userId = userContext.GetUserId();
                     var id = await handler.Handle(command, userId, ct);
                     if (!id.HasValue)
                     {

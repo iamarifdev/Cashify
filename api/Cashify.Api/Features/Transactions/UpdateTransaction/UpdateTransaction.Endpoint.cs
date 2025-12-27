@@ -1,4 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
+using Cashify.Api.Infrastructure;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +14,7 @@ public class UpdateTransactionEndpoint : IEndpoint
                     Guid cashbookId,
                     Guid transactionId,
                     [FromBody] UpdateTransactionCommand command,
-                    HttpContext context,
+                    IUserContext userContext,
                     UpdateTransactionHandler handler,
                     IValidator<UpdateTransactionCommand> validator,
                     CancellationToken ct) =>
@@ -25,12 +25,7 @@ public class UpdateTransactionEndpoint : IEndpoint
                         return Results.ValidationProblem(validation.ToDictionary());
                     }
 
-                    var userIdValue = context.User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-                    if (!Guid.TryParse(userIdValue, out var userId))
-                    {
-                        return Results.Unauthorized();
-                    }
-
+                    var userId = userContext.GetUserId();
                     var ok = await handler.Handle(businessId, cashbookId, transactionId, userId, command, ct);
                     return ok ? Results.NoContent() : Results.NotFound();
                 })

@@ -1,7 +1,7 @@
+using Cashify.Api.Infrastructure;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace Cashify.Api.Features.Businesses.CreateBusiness;
 
@@ -11,7 +11,7 @@ public class CreateBusinessEndpoint : IEndpoint
     {
         app.MapPost("/businesses",
                 [Authorize] async ([FromBody] CreateBusinessCommand command,
-                    HttpContext context,
+                    IUserContext userContext,
                     CreateBusinessHandler handler,
                     IValidator<CreateBusinessCommand> validator,
                     CancellationToken ct) =>
@@ -22,12 +22,7 @@ public class CreateBusinessEndpoint : IEndpoint
                         return Results.ValidationProblem(validation.ToDictionary());
                     }
 
-                    var userIdValue = context.User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-                    if (!Guid.TryParse(userIdValue, out var userId))
-                    {
-                        return Results.Unauthorized();
-                    }
-
+                    var userId = userContext.GetUserId();
                     var businessId = await handler.Handle(command, userId, ct);
                     return Results.Created($"/businesses/{businessId}", new { id = businessId, name = command.Name });
                 })

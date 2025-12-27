@@ -1,5 +1,5 @@
-using System.IdentityModel.Tokens.Jwt;
 using Cashify.Api.Features;
+using Cashify.Api.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Cashify.Api.Features.Reports.GetSummary;
@@ -9,7 +9,7 @@ public class GetSummaryEndpoint : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("/businesses/{businessId:guid}/reports/summary",
-                [Authorize] async ([AsParameters] GetSummaryQuery query, HttpContext context, GetSummaryHandler handler, FluentValidation.IValidator<GetSummaryQuery> validator, CancellationToken ct) =>
+                [Authorize] async ([AsParameters] GetSummaryQuery query, IUserContext userContext, GetSummaryHandler handler, FluentValidation.IValidator<GetSummaryQuery> validator, CancellationToken ct) =>
                 {
                     var validation = await validator.ValidateAsync(query, ct);
                     if (!validation.IsValid)
@@ -17,12 +17,7 @@ public class GetSummaryEndpoint : IEndpoint
                         return Results.ValidationProblem(validation.ToDictionary());
                     }
 
-                    var userIdValue = context.User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-                    if (!Guid.TryParse(userIdValue, out var userId))
-                    {
-                        return Results.Unauthorized();
-                    }
-
+                    var userId = userContext.GetUserId();
                     var result = await handler.Handle(query, userId, ct);
                     if (result is null)
                     {

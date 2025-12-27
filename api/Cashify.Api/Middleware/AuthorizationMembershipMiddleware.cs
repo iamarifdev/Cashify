@@ -1,4 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Cashify.Api.Database;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +18,7 @@ public class AuthorizationMembershipMiddleware
 
     public async Task Invoke(HttpContext context, AppDbContext dbContext)
     {
-        var userIdValue = context.User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userIdValue = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (Guid.TryParse(userIdValue, out var userId))
         {
             var path = context.Request.Path.Value ?? string.Empty;

@@ -31,8 +31,10 @@ public static class ServiceCollectionExtensions
             services.AddHandlersFromAssembly(assembly);
             services.AddEndpointsFromAssembly(assembly);
             services.AddCors();
+            services.AddHttpContextAccessor();
             services.AddScoped<JwtTokenService>();
             services.AddScoped<ActivityLogService>();
+            services.AddScoped<IUserContext, UserContext>();
             services.AddSingleton(new GoogleJsonWebSignature.ValidationSettings());
         
             return services;

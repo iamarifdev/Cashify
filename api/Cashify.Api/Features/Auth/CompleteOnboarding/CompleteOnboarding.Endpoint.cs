@@ -1,4 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
+using Cashify.Api.Infrastructure;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +11,7 @@ public class CompleteOnboardingEndpoint : IEndpoint
     {
         app.MapPost("/auth/onboarding",
                 [Authorize] async ([FromBody] CompleteOnboardingRequest request,
-                    HttpContext context,
+                    IUserContext userContext,
                     CompleteOnboardingHandler handler,
                     IValidator<CompleteOnboardingRequest> validator,
                     CancellationToken ct) =>
@@ -22,12 +22,7 @@ public class CompleteOnboardingEndpoint : IEndpoint
                         return Results.ValidationProblem(validation.ToDictionary());
                     }
 
-                    var userIdValue = context.User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-                    if (!Guid.TryParse(userIdValue, out var userId))
-                    {
-                        return Results.Unauthorized();
-                    }
-
+                    var userId = userContext.GetUserId();
                     var result = await handler.Handle(userId, request, ct);
                     return Results.Ok(result);
                 })

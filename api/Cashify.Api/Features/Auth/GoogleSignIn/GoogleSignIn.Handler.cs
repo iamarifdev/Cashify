@@ -33,7 +33,9 @@ public class GoogleSignInHandler
             request.IdToken,
             new GoogleJsonWebSignature.ValidationSettings
             {
-                Audience = allowedAudiences
+                Audience = allowedAudiences,
+                HostedDomain = null,
+                Clock = null
             });
 
         var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.GoogleUserId == payload.Subject, cancellationToken);
