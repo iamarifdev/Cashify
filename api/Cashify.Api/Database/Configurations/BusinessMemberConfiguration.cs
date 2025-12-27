@@ -9,5 +9,9 @@ public class BusinessMemberConfiguration : IEntityTypeConfiguration<BusinessMemb
     public void Configure(EntityTypeBuilder<BusinessMember> builder)
     {
         builder.HasIndex(x => new { x.BusinessId, x.UserId }).IsUnique();
+        
+        builder.Property(x => x.Role)
+            .HasConversion<string>()
+            .IsRequired();
     }
 }

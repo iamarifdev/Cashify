@@ -1,6 +1,5 @@
 using Cashify.Api.Database;
 using Cashify.Api.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cashify.Api.Infrastructure;
 

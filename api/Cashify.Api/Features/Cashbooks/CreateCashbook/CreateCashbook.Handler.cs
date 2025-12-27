@@ -39,7 +39,7 @@ public class CreateCashbookHandler
             Id = Guid.NewGuid(),
             CashbookId = cashbook.Id,
             UserId = userId,
-            Role = "owner"
+            Role = Role.Owner
         });
 
         await _dbContext.SaveChangesAsync(cancellationToken);

@@ -18,7 +18,7 @@ public class AddMemberHandler
     public async Task<bool> Handle(Guid businessId, Guid actingUserId, AddMemberCommand command, CancellationToken cancellationToken)
     {
         var isOwner = await _dbContext.BusinessMembers
-            .AnyAsync(x => x.BusinessId == businessId && x.UserId == actingUserId && x.Role == "owner", cancellationToken);
+            .AnyAsync(x => x.BusinessId == businessId && x.UserId == actingUserId && x.Role == Role.Owner, cancellationToken);
 
         if (!isOwner)
         {

@@ -7,6 +7,6 @@ public class AddCashbookMemberValidator : AbstractValidator<AddCashbookMemberCom
     public AddCashbookMemberValidator()
     {
         RuleFor(x => x.UserId).NotEmpty();
-        RuleFor(x => x.Role).NotEmpty().MaximumLength(50);
+        RuleFor(x => x.Role).IsInEnum().WithMessage("Role must be Owner, Editor, or Viewer");
     }
 }

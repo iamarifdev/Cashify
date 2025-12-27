@@ -18,10 +18,10 @@ public class AddCashbookMemberHandler
     public async Task<bool> Handle(Guid businessId, Guid cashbookId, Guid actingUserId, AddCashbookMemberCommand command, CancellationToken cancellationToken)
     {
         var isBusinessOwner = await _dbContext.BusinessMembers
-            .AnyAsync(x => x.BusinessId == businessId && x.UserId == actingUserId && x.Role == "owner", cancellationToken);
+            .AnyAsync(x => x.BusinessId == businessId && x.UserId == actingUserId && x.Role == Role.Owner, cancellationToken);
 
         var isCashbookOwner = await _dbContext.CashbookMembers
-            .AnyAsync(x => x.CashbookId == cashbookId && x.UserId == actingUserId && x.Role == "owner", cancellationToken);
+            .AnyAsync(x => x.CashbookId == cashbookId && x.UserId == actingUserId && x.Role == Role.Owner, cancellationToken);
 
         if (!isBusinessOwner && !isCashbookOwner)
         {

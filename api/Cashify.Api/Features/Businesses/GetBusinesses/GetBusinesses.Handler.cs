@@ -16,7 +16,7 @@ public class GetBusinessesHandler
     {
         return await _dbContext.BusinessMembers
             .Where(x => x.UserId == userId)
-            .Select(x => new BusinessSummary(x.BusinessId, x.Business!.Name, x.Role))
+            .Select(x => new BusinessSummary(x.BusinessId, x.Business!.Name, x.Role.ToString()))
             .ToListAsync(cancellationToken);
     }
 }

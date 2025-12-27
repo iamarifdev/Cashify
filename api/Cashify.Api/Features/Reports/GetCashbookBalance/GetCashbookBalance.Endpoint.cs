@@ -1,4 +1,3 @@
-using Cashify.Api.Features;
 using Cashify.Api.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 

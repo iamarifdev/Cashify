@@ -56,7 +56,7 @@ public class CompleteOnboardingHandler
             Id = Guid.NewGuid(),
             BusinessId = business.Id,
             UserId = userId,
-            Role = "owner"
+            Role = Role.Owner
         };
 
         _dbContext.Businesses.Add(business);
