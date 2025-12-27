@@ -1,5 +1,6 @@
 using Cashify.Api.Database;
 using Cashify.Api.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cashify.Api.Features.Businesses.CreateBusiness;
 
@@ -35,8 +36,12 @@ public class CreateBusinessHandler
         _dbContext.Businesses.Add(business);
         _dbContext.BusinessMembers.Add(member);
 
+        await _dbContext.Users.Where(x => !x.HasCompletedOnboarding)
+            .ExecuteUpdateAsync(x => x.SetProperty(p => p.HasCompletedOnboarding, true), cancellationToken);
+
         await _dbContext.SaveChangesAsync(cancellationToken);
-        await _activityLogService.Log(userId, "business.create", business.Id, null, business.Id, new { command.Name }, cancellationToken);
+        await _activityLogService.Log(userId, "business.create", business.Id, null, business.Id, new { command.Name },
+            cancellationToken);
         return business.Id;
     }
 }
